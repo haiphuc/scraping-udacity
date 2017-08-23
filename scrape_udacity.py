@@ -211,7 +211,7 @@ default_timeout = float(input('Default Timeout in Seconds: '))
 syllabus = get_syllabus(nanodegree_id, email, password, default_timeout)
 
 # Multithreading
-pool = Pool(4) # Insert number of cores of your processor here
+pool = Pool()
 contents = pool.starmap(fill_syllabus, ((part_path, email, password,
 					 default_timeout)
                                         for part_path in syllabus.values()))
