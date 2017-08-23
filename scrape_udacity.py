@@ -35,15 +35,15 @@ def fill_syllabus(part_path, email, password, default_timeout):
                 # Extract contents
                 try:
                     concepts[concept] = extract_contents(browser, wait,
-                    									 concept_path)
+							 concept_path)
                 except Exception:
                     try:
                         concepts[concept] = extract_contents(browser, wait,
-                        									 concept_path)
+							     concept_path)
                     except Exception:
                         try:
                             concepts[concept] = extract_contents(browser, wait,
-                            									 concept_path)
+								 concept_path)
                         except Exception:
                             continue
             else:
@@ -74,8 +74,8 @@ def complete_syllabus(syllabus, email, password, default_timeout):
                 if type(lesson_path) == str and lesson_path != '#':
                     try:
                         syllabus[part][lesson] = extract_concepts(browser,
-                        										  wait,
-                        										  lesson_path)
+								  wait,
+								  lesson_path)
                     except Exception:
                         continue
     
@@ -88,8 +88,8 @@ def complete_syllabus(syllabus, email, password, default_timeout):
                         if type(concept_path) == str:
                             try:
                                 syllabus[part][lesson][concept] = \
-                                	extract_contents(browser, wait,
-                                					 concept_path)
+					extract_contents(browser, wait,
+							 concept_path)
                             except Exception:
                                 continue
                     
@@ -103,11 +103,11 @@ def get_syllabus(nanodegree_id, email, password, default_timeout):
     
     # Get core curriculum
     browser.get('https://classroom.udacity.com/nanodegrees/'
-    			+ nanodegree_id + '/syllabus/core-curriculum')
+		+ nanodegree_id + '/syllabus/core-curriculum')
     wait.until(EC.visibility_of_all_elements_located
-    		   ((By.CSS_SELECTOR, 'li._waypoint--waypoint--2cXSk')))
+	       ((By.CSS_SELECTOR, 'li._waypoint--waypoint--2cXSk')))
     soup = BeautifulSoup(browser.find_element_by_css_selector
-    					 ('ol._waypoints--waypoints--1Nos9')
+			 ('ol._waypoints--waypoints--1Nos9')
                          .get_attribute('outerHTML'), 'lxml')
     core_curriculum = OrderedDict((div.find('a').text, div.find('a')['href'])
                                   for div in
@@ -115,11 +115,11 @@ def get_syllabus(nanodegree_id, email, password, default_timeout):
     
     # Get extracurricular
     browser.get('https://classroom.udacity.com/nanodegrees/'
-    			+ nanodegree_id + '/syllabus/extracurricular')
+		+ nanodegree_id + '/syllabus/extracurricular')
     wait.until(EC.visibility_of_all_elements_located
-    		   ((By.CSS_SELECTOR, 'li._waypoint--waypoint--2cXSk')))
+	       ((By.CSS_SELECTOR, 'li._waypoint--waypoint--2cXSk')))
     soup = BeautifulSoup(browser.find_element_by_css_selector
-    					 ('ol._waypoints--waypoints--1Nos9')
+			 ('ol._waypoints--waypoints--1Nos9')
                          .get_attribute('outerHTML'), 'lxml')
     extracurricular = OrderedDict((div.find('a').text, div.find('a')['href'])
                                   for div in
@@ -133,15 +133,15 @@ def signin_udacity(email, password, default_timeout):
     browser = webdriver.Chrome()
     wait = WebDriverWait(browser, default_timeout)
     browser.get('https://auth.udacity.com/sign-in'
-    			+ '?next=https%3A%2F%2Fclassroom.udacity.com%2Fauthenticated')
+		+ '?next=https%3A%2F%2Fclassroom.udacity.com%2Fauthenticated')
     browser.find_element_by_css_selector('input[type="email"]'
-    									 ).send_keys(email)
+					).send_keys(email)
     browser.find_element_by_css_selector('input[type="password"]'
-    									 ).send_keys(password)
+					).send_keys(password)
     browser.find_element_by_css_selector('button.ureact-button--primary--2Z4W9'
-    									 ).click()
+					).click()
     wait.until(EC.visibility_of_element_located((By.ID,
-    											 'main-layout-content')))
+						 'main-layout-content')))
     return browser, wait
 
 
@@ -149,9 +149,9 @@ def extract_lessons(browser, wait, part_path):
     # Load part
     browser.get('https://classroom.udacity.com' + part_path)
     wait.until(EC.visibility_of_all_elements_located
-    		   ((By.CSS_SELECTOR, 'li._waypoint--waypoint--2cXSk')))
+	       ((By.CSS_SELECTOR, 'li._waypoint--waypoint--2cXSk')))
     soup = BeautifulSoup(browser.find_element_by_css_selector
-    					 ('ol._waypoints--waypoints--1Nos9')
+			 ('ol._waypoints--waypoints--1Nos9')
                          .get_attribute('outerHTML'), 'lxml')
     return OrderedDict((div.find('h4').text, div.find('a')['href'])
                        for div in
@@ -162,11 +162,11 @@ def extract_concepts(browser, wait, lesson_path):
     # Load lesson
     browser.get('https://classroom.udacity.com' + lesson_path)
     wait.until(EC.visibility_of_all_elements_located
-    		   ((By.CSS_SELECTOR, 'li._item--item-selected--3LMMf')))
+	       ((By.CSS_SELECTOR, 'li._item--item-selected--3LMMf')))
     
     # Scrape concepts
     soup = BeautifulSoup(browser.find_element_by_css_selector
-    					 ('ol.index--contents-list--33vHB')
+			 ('ol.index--contents-list--33vHB')
                          .get_attribute('outerHTML'), 'lxml')
     
     return OrderedDict((a['title'], a['href']) for a in soup.find_all('a'))
@@ -177,24 +177,25 @@ def extract_contents(browser, wait, concept_path):
     browser.get('https://classroom.udacity.com' + concept_path)
     try:
         wait.until(EC.visibility_of_all_elements_located
-        		   ((By.CSS_SELECTOR, 'div._main--content-container--ILkoI')))
+		   ((By.CSS_SELECTOR, 'div._main--content-container--ILkoI')))
     except Exception:
         wait.until(EC.visibility_of_all_elements_located
-        		   ((By.CSS_SELECTOR, 'div.index--project-container--2b9U1')))
+		   ((By.CSS_SELECTOR, 'div.index--project-container--2b9U1')))
+    
     # Scrap contents
     contents = OrderedDict()
     try:
         soup = BeautifulSoup(browser.find_element_by_css_selector
-        					 ('div._main--content-container--ILkoI')
+			     ('div._main--content-container--ILkoI')
                              .get_attribute('outerHTML'), 'lxml')
         if soup.find('iframe'):
             contents['video'] = soup.find('iframe')['src']
         if soup.find('div', 'ltr'):
             markdown = list(set(a['href']
-            					for a in soup.find('div', 'ltr').find_all('a')
+				for a in soup.find('div', 'ltr').find_all('a')
                                 if a['href'] != '#'
-                                	and 'classroom.udacity.com'
-                                		not in a['href']))
+					and 'classroom.udacity.com'
+						not in a['href']))
             if markdown:
                 contents['markdown'] = markdown
     except Exception:
@@ -212,7 +213,7 @@ syllabus = get_syllabus(nanodegree_id, email, password, default_timeout)
 # Multithreading
 pool = Pool(4) # Insert number of cores of your processor here
 contents = pool.starmap(fill_syllabus, ((part_path, email, password,
-										 default_timeout)
+					 default_timeout)
                                         for part_path in syllabus.values()))
 pool.close()
 pool.join()
@@ -227,4 +228,4 @@ with open('udacity_syllabus.json', 'w') as file:
     json.dump(syllabus, file)
     
 print('The detail syllabus has been written to the udacity_syllabus.json file.'
-	  )
+     )
