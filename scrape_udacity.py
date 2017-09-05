@@ -218,6 +218,7 @@ pool = Pool()
 contents = pool.starmap(fill_syllabus, ((part_path, email, password,
 					 default_timeout)
                                         for part_path in syllabus.values()))
+print('Scraping Udacity...')
 pool.close()
 pool.join()
 
