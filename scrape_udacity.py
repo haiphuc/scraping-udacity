@@ -191,7 +191,8 @@ def extract_contents(browser, wait, concept_path):
 			     ('div._main--content-container--ILkoI')
                              .get_attribute('outerHTML'), 'lxml')
         if soup.find('iframe'):
-            contents['video'] = soup.find('iframe')['src']
+            contents['video'] = [iframe['src'].split('?')[0]
+				 for iframe in soup.find_all('iframe')]
         if soup.find('div', 'ltr'):
             markdown = list(set(a['href']
 				for a in soup.find('div', 'ltr').find_all('a')
